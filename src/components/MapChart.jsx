@@ -54,6 +54,21 @@ const MapChart = () => {
           .scale(800)
           .translate([svgWidth / 2, svgHeight / 2]);
 
+        // Add a text label for the current data point
+        mapsContainer
+          .append("text") // Append the text directly to mapsContainer
+          .attr(
+            "x",
+            index * svgWidth +
+              projection([+data.longitude, +data.latitude])[0] -
+              135
+          ) // Adjust the x-coordinate
+          .attr("y", projection([+data.longitude, +data.latitude])[1] + 20) // Adjust the y-coordinate
+          .text(`${data.location}`)
+          .style("fill", "black")
+          .style("font-size", "0.8vw") // Set the font size
+          .raise();
+
         const clipRadiusScale = d3
           .scaleLinear()
           .domain([0, d3.max(csvData, (d) => +d.duration)])
@@ -100,7 +115,7 @@ const MapChart = () => {
           .attr("y1", projection([+data.longitude, +data.latitude])[1] - xSize)
           .attr("x2", projection([+data.longitude, +data.latitude])[0] + xSize)
           .attr("y2", projection([+data.longitude, +data.latitude])[1] + xSize)
-          .style("stroke", "red")
+          .style("stroke", "#79726B")
           .attr("stroke-width", 2);
         mapGroup
           .append("line")
@@ -108,7 +123,7 @@ const MapChart = () => {
           .attr("y1", projection([+data.longitude, +data.latitude])[1] + xSize)
           .attr("x2", projection([+data.longitude, +data.latitude])[0] + xSize)
           .attr("y2", projection([+data.longitude, +data.latitude])[1] - xSize)
-          .style("stroke", "red")
+          .style("stroke", "#79726B")
           .attr("stroke-width", 2);
       });
 
@@ -159,9 +174,31 @@ const MapChart = () => {
     handleFileSelect(file);
   };
 
+  // const downloadCSVFile = () => {
+  //   const filePath = "/path/to/your/file.csv"; // Replace with the actual path to your CSV file
+
+  //   fetch(filePath)
+  //     .then((response) => response.blob())
+  //     .then((blob) => {
+  //       const url = window.URL.createObjectURL(new Blob([blob]));
+  //       const link = document.createElement("a");
+  //       link.href = url;
+  //       link.setAttribute("download", "downloaded_file.csv");
+  //       document.body.appendChild(link);
+  //       link.click();
+  //       document.body.removeChild(link);
+  //     })
+  //     .catch((error) => console.error("Error downloading CSV file:", error));
+  // };
+
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "right" }}>
+        {/* <div style={{ marginTop: "3%" }}>
+          <button style={{ padding: "5%" }} onClick={downloadCSVFile}>
+            Download Sample CSV
+          </button>
+        </div> */}
         <div
           ref={dropAreaRef}
           id="drop-area"
